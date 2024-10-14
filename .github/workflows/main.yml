@@ -1,0 +1,68 @@
+name: Build and Run Docker 
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch if necessary
+  pull_request:
+    branches:
+      - main  # Change this to your default branch if necessary
+  schedule:
+    - cron: '0 * * * *'  # This runs the action at the start of every hour
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t my-image-name .
+
+  run_container_1:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure this job runs after the build job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkout again to access the context
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image for container 1
+        run: |
+          docker build -t my-image-name .
+
+      - name: Run Docker container 1
+        run: |
+          docker run --name my-container-1 --cpu-shares=2048 --cpu-quota=26540 my-image-name &  # Limit for CPU 0
+          sleep 3300  # Sleep for 55 minutes (3300 seconds)
+          docker stop my-container-1  # Stop the container after the sleep
+
+  run_container_2:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure this job runs after the build job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkout again to access the context
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image for container 2
+        run: |
+          docker build -t my-image-name .
+
+      - name: Run Docker container 2
+        run: |
+          docker run --name my-container-2 --cpu-shares=2048 --cpu-quota=45280 my-image-name &  # Limit for CPU 1
+          sleep 3300  # Sleep for 55 minutes (3300 seconds)
+          docker stop my-container-2  # Stop the container after the sleep
