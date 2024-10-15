@@ -7,8 +7,6 @@ on:
   pull_request:
     branches:
       - main  # Change this to your default branch if necessary
-  schedule:
-    - cron: '0 * * * *'  # This runs the action at the start of every hour
 
 jobs:
   build:
