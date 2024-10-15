@@ -3,6 +3,7 @@ name: Update README Every 2 Hours
 on:
   schedule:
     - cron: '0 */2 * * *'  # Runs every 2 hours
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   update_readme:
