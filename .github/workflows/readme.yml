@@ -1,0 +1,29 @@
+name: Update README Every 2 Hours
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'  # Runs every 2 hours
+
+jobs:
+  update_readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Update README
+        run: |
+          echo "Updated at $(date)" >> README.md  # Appending the current date and time
+          
+      - name: Commit Changes
+        run: |
+          git config user.email "jerrypoint980@outlook.com"
+          git config user.name "kilouio91"
+          git add README.md
+          git commit -m "Update README with current date and time"
+        
+      - name: Push Changes
+        run: git push origin main  # Change 'main' to your branch name if needed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
